@@ -1,0 +1,3 @@
+Hello! Hoping to create a Slack alert channel for national weather service spot forecasts for wildfires. Similar to the #radar-air-quality-san-francisco and #radar-power-outages-san-francisco channels. Can filter by weather forecast office (WFO). Ones we'd be interested are from the following offices: MTR, STO, HNX, LOX, SGX, VEF, REV, MTR and EKA. Would also want to filter type of request as "wildfire"
+Thank you!
+https://spot.weather.gov/
