@@ -25,3 +25,10 @@ jobs:
       - name: Run script
         run: pipenv run python scrape.py > output.log
           tail -n 10 output.log
+
+      - name: Commit and push if csv changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add spot_forecasts.csv
+          git diff --cached --quiet || (git commit -m "Update forecasts csv" && git push)
