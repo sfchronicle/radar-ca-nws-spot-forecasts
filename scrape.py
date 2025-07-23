@@ -11,22 +11,22 @@ import boto3
 cp = configparser.ConfigParser(interpolation=None)
 
 # read env file based on location
-if os.path.exists('../../.env'):  
-    cp.read('../../.env')  
-elif os.path.exists('/Users/emma.stiefel/.env'):
-    cp.read('/Users/emma.stiefel/.env')  
-else: # production
-    cp.read("/home/ec2-user/Projects/deploy-engine/.env")
+# if os.path.exists('../../.env'):  
+#     cp.read('../../.env')  
+# elif os.path.exists('/Users/emma.stiefel/.env'):
+#     cp.read('/Users/emma.stiefel/.env')  
+# else: # production
+#     cp.read("/home/ec2-user/Projects/deploy-engine/.env")
 
-os.environ["SFC_AWS_ACCESS_KEY_ID"] = cp.get('aws', 's3_user')
-os.environ["SFC_AWS_SECRET_ACCESS_KEY"] = cp.get('aws', 's3_pass')
-s3 = boto3.resource('s3')
+# os.environ["SFC_AWS_ACCESS_KEY_ID"] = cp.get('aws', 's3_user')
+# os.environ["SFC_AWS_SECRET_ACCESS_KEY"] = cp.get('aws', 's3_pass')
+# s3 = boto3.resource('s3')
 
-sfc_bucket_string = 'sfc-project-files'
-sfc_client = boto3.client('s3',
-    aws_access_key_id=os.environ['SFC_AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=os.environ['SFC_AWS_SECRET_ACCESS_KEY']
-)
+# sfc_bucket_string = 'sfc-project-files'
+# sfc_client = boto3.client('s3',
+#     aws_access_key_id=os.environ['SFC_AWS_ACCESS_KEY_ID'],
+#     aws_secret_access_key=os.environ['SFC_AWS_SECRET_ACCESS_KEY']
+# )
 
 # send message to slack
 webhook_url = "https://hooks.slack.com/services/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"
@@ -43,7 +43,8 @@ def send_message(message):
         
 try:
     # read in existing data
-    df = pd.read_json("https://files.sfchronicle.com/radar-ca-nws-spot-forecasts/spot_forecasts.json")
+    # df = pd.read_json("https://files.sfchronicle.com/radar-ca-nws-spot-forecasts/spot_forecasts.json")
+    df = pd.read_csv('spot_forecasts.csv')
 
     # load in and process new data
     url = 'https://spot.weather.gov/cms/api/1.0/requests?office.id=&isArchived=false'
@@ -80,8 +81,8 @@ try:
         send_message(f"New spot forecast request\nName: {r['name']}\nType: {r['type']}\nWFO: {r['wfo']}\nSubmitted: {s}\nDelivered: {d}")
 
     # save new df as old df
-    # new_df.to_csv('spot_forecasts.csv')
-    sfc_client.put_object(Body=new_df.to_json(), Bucket=sfc_bucket_string, Key="radar-ca-nws-spot-forecasts/spot_forecasts.json")
+    new_df.to_csv('spot_forecasts.csv')
+    # sfc_client.put_object(Body=new_df.to_json(), Bucket=sfc_bucket_string, Key="radar-ca-nws-spot-forecasts/spot_forecasts.json")
 
 except Exception as E:
     send_message(f'scraping ERROR {E}')
