@@ -1,4 +1,4 @@
-name: Check Flight Delay
+name: Check for new forecasts
 
 on:
   schedule:
